@@ -13,6 +13,7 @@ MAX_RETRY_COUNT = 5
 REPO_NAME = ARGV[0]
 
 raise "require GITHUB_API_TOKEN" unless ENV["GITHUB_API_TOKEN"]
+raise "require GOOGLE_MAPS_API_KEY" unless ENV["GOOGLE_MAPS_API_KEY"]
 raise "require REPONAME" unless REPO_NAME
 
 class RetryableError < StandardError; end
@@ -41,7 +42,7 @@ end
 def fetch_latlng(address)
   retry_count = 0
   begin
-    json = open("http://maps.googleapis.com/maps/api/geocode/json?address=#{URI.encode(address)}&sensor=false").read
+    json = open("https://maps.googleapis.com/maps/api/geocode/json?address=#{URI.encode(address)}&sensor=false&key=#{ENV["GOOGLE_MAPS_API_KEY"]}").read
     hash = JSON.parse(json)
 
     case hash["status"]
@@ -49,6 +50,12 @@ def fetch_latlng(address)
       {
         lat: hash["results"][0]["geometry"]["location"]["lat"],
         lng: hash["results"][0]["geometry"]["location"]["lng"],
+      }
+    when "ZERO_RESULTS"
+      puts "#{URI.encode(address)} is not found"
+      {
+        lat: "",
+        lng: "",
       }
     when "OVER_QUERY_LIMIT"
       raise RetryableError

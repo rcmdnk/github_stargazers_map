@@ -2,8 +2,9 @@
 
 ## Setup
 1. https://github.com/settings/tokens でアクセストークンを取得
+2. [Google Maps Platform - Geo-location API Google Maps Platform  Google Cloud](https://cloud.google.com/maps-platform/?&_ga=2.198194155.575401857.1550238051-970206952.1525920064#get-started)からGoogle Maps API KEYを取得
 2. `cp .env.example .env`
-3. `.env` にアクセストークンを書くか環境変数で `export` する
+3. `.env` にアクセストークン/KEYを書くか環境変数で `export` する
 4. `bundle install`
 
 ## Usage
